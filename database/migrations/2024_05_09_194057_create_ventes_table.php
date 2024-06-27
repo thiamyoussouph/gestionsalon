@@ -14,15 +14,12 @@ return new class extends Migration
         Schema::create('ventes', function (Blueprint $table) {
             $table->id();
             $table->string('numero_facture')->unique();
-            $table->string('nom_client')->nullable();
             $table->unsignedBigInteger('user_id'); // Le vendeur
             $table->decimal('total', 10, 2)->default(0);
             $table->decimal('montant_recu', 10, 2)->default(0);
             $table->decimal('montant_rendu', 10, 2)->default(0);
             $table->boolean('status')->default(0); // 0 = En attente, 1 = Payée
             $table->string('mode_paiement')->nullable();
-            $table->string('reference_paiement')->nullable();
-            $table->string('numero_transaction')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('user_id')->references('id')->on('users');
