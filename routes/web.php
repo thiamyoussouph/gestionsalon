@@ -40,10 +40,13 @@ Route::middleware('auth')->group(function () {
 
     // Ventes
     Route::get('/ventes', [VenteController::class, 'index'])->name('ventes.index');
+    Route::get('/ventes/historique', [VenteController::class, 'historique'])->name('ventes.historique');
+    Route::get('/ventes/recu/{id}', [VenteController::class, 'afficherRecu'])->name('ventes.recu');
     Route::post('/ventes/ajouter-produit', [VenteController::class, 'ajouterProduit'])->name('ventes.ajouterProduit');
     Route::post('/ventes/finaliser', [VenteController::class, 'finaliserVente'])->name('ventes.finaliserVente');
-    Route::get('/produits/par-code-barres/{codeBarres}', [VenteController::class, 'getProduitParCodeBarres'])->name('produits.parCodeBarres');
-    Route::get('/ventes/recu/{id}', [VenteController::class, 'afficherRecu'])->name('ventes.recu');
+
+    // Route code-barres — séparée des routes produits pour éviter tout conflit
+    Route::get('/api/produits/par-code-barres/{codeBarres}', [VenteController::class, 'getProduitParCodeBarres'])->name('produits.parCodeBarres');
 });
 
 require __DIR__.'/auth.php';

@@ -4,7 +4,12 @@
 @section('content')
 <div class="row">
     <div class="col-md-8">
-        <h4 class="mb-3">Nouvelle Vente</h4>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>Nouvelle Vente</h4>
+    <a href="{{ route('ventes.historique') }}" class="btn btn-outline-secondary btn-sm">
+        <i class="fas fa-history me-1"></i> Historique
+    </a>
+</div>
 
         {{-- Scanner code-barres --}}
         <div class="card mb-3">
@@ -95,7 +100,7 @@ function ajouterProduit() {
     const quantite = parseInt(document.getElementById('quantiteInput').value) || 1;
     if (!codeBarres) return;
 
-    fetch(`/produits/par-code-barres/${codeBarres}`)
+    fetch(`/api/produits/par-code-barres/${codeBarres}`)
         .then(r => r.ok ? r.json() : Promise.reject('Produit non trouvé'))
         .then(produit => {
             const index = produits.findIndex(p => p.id === produit.id);

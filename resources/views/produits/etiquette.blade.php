@@ -1,41 +1,59 @@
 @extends('layouts.app')
+@section('title', 'Étiquette — ' . $produit->nom)
+
 @section('content')
-<h2 class="mb-4">Étiquette du Produit</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Étiquette du Produit</h4>
+    <a href="{{ route('produits.index') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Retour
+    </a>
+</div>
+
 <div class="row">
-    <div class="col-md-3">
-        <div class="card mb-4">
-            <div class="card-body text-center">
-                <div id="etiquette-{{ $produit->id }}" class="etiquette">
-                    <h5 class="card-title">{{ $produit->nom }}</h5>
-                    <p class="card-text">{{ $produit->prix }} CFA</p>
-                    <img src="{{ asset('storage/' . $produit->barcode_image_path) }}" alt="Code-barres" class="mb-3">
-                </div>
-                <button class="btn btn-primary" onclick="downloadEtiquette({{ $produit->id }})">Télécharger Étiquette</button>
-                <button class="btn btn-primary" onclick="printEtiquette('etiquette-{{ $produit->id }}')">Imprimer Étiquette</button>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center" id="etiquette-zone">
+                <h5 class="card-title mb-1">{{ $produit->nom }}</h5>
+                <p class="card-text fw-bold fs-5 mb-2">{{ number_format($produit->prix, 0, ',', ' ') }} CFA</p>
+                @if($produit->barcode_image_path)
+                    <img src="{{ asset('storage/' . $produit->barcode_image_path) }}"
+                         alt="Code-barres {{ $produit->code_barres }}"
+                         class="img-fluid mb-2"
+                         style="max-height: 80px;">
+                    <p class="text-muted small mb-0">{{ $produit->code_barres }}</p>
+                @else
+                    <div class="alert alert-warning">Code-barres non généré</div>
+                @endif
+            </div>
+            <div class="card-footer d-flex gap-2 justify-content-center">
+                <button class="btn btn-outline-primary" onclick="imprimerEtiquette()">
+                    <i class="fas fa-print me-1"></i> Imprimer
+                </button>
             </div>
         </div>
     </div>
 </div>
-        
-       
+
+<style>
+@media print {
+    body > *:not(#print-zone) { display: none !important; }
+    #print-zone { display: block !important; }
+}
+#print-zone { display: none; }
+</style>
+
+<div id="print-zone">
+    <h5>{{ $produit->nom }}</h5>
+    <p><strong>{{ number_format($produit->prix, 0, ',', ' ') }} CFA</strong></p>
+    @if($produit->barcode_image_path)
+        <img src="{{ asset('storage/' . $produit->barcode_image_path) }}" alt="Code-barres" style="max-height:80px;">
+        <p>{{ $produit->code_barres }}</p>
+    @endif
+</div>
+
 <script>
-     function downloadEtiquette(id) {
-            const element = document.getElementById('etiquette-' + id);
-            html2canvas(element).then(canvas => {
-                const link = document.createElement('a');
-                link.href = canvas.toDataURL('image/png');
-                link.download = 'etiquette-' + id + '.png';
-                link.click();
-            });
-        }
-        function printEtiquette(etiquetteId) {
-    var content = document.getElementById(etiquetteId).innerHTML;
-    var originalContent = document.body.innerHTML;
-
-    document.body.innerHTML = content; // Remplace le contenu de la page par l'étiquette
-    window.print(); // Lance l'impression
-
-    document.body.innerHTML = originalContent; // Restaure le contenu original après l'impression
+function imprimerEtiquette() {
+    window.print();
 }
 </script>
 @endsection

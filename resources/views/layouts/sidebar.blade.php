@@ -46,8 +46,11 @@
         <a href="{{ route('categories.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2 text-decoration-none {{ request()->routeIs('categories.*') ? 'active' : '' }}">
             <i class="fas fa-tags fa-fw"></i> Catégories
         </a>
-        <a href="{{ route('ventes.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2 text-decoration-none {{ request()->routeIs('ventes.*') ? 'active' : '' }}">
-            <i class="fas fa-cash-register fa-fw"></i> Ventes
+        <a href="{{ route('ventes.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2 text-decoration-none {{ request()->routeIs('ventes.index') ? 'active' : '' }}">
+            <i class="fas fa-cash-register fa-fw"></i> Nouvelle Vente
+        </a>
+        <a href="{{ route('ventes.historique') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2 text-decoration-none {{ request()->routeIs('ventes.historique') ? 'active' : '' }}">
+            <i class="fas fa-history fa-fw"></i> Historique
         </a>
     </div>
 </div>
