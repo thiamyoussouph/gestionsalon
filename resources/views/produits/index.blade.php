@@ -25,21 +25,28 @@
             <thead>
                 <tr>
                     <th>Nom</th>
+                    <th>Prix</th>
                     <th>Quantité</th>
                     <th>Catégorie</th>
-                    <th>etiquette</th>
-
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($produits as $produit)
                 <tr>
                     <td>{{ $produit->nom }}</td>
+                    <td>{{ number_format($produit->prix, 2) }} CFA</td>
                     <td>{{ $produit->quantite }}</td>
-                    <td>{{ $produit->categorie->name }}</td>
+                    <td>{{ $produit->categorie->name ?? '-' }}</td>
                     <td>
-                        <a href="{{ route('code-barres', $produit->id) }}" class="btn btn-primary">Voir</a>
-                     
+                        <a href="{{ route('code-barres', $produit->id) }}" class="btn btn-sm btn-primary">Étiquette</a>
+                        <a href="{{ route('produits.edit', $produit->id) }}" class="btn btn-sm btn-warning">Modifier</a>
+                        <form action="{{ route('produits.destroy', $produit->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce produit ?')">Supprimer</button>
+                        </form>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
