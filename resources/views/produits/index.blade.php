@@ -33,10 +33,17 @@
             </thead>
             <tbody>
                 @foreach($produits as $produit)
-                <tr>
+                <tr class="{{ $produit->quantite == 0 ? 'table-danger' : ($produit->quantite <= 5 ? 'table-warning' : '') }}">
                     <td>{{ $produit->nom }}</td>
                     <td>{{ number_format($produit->prix, 2) }} CFA</td>
-                    <td>{{ $produit->quantite }}</td>
+                    <td>
+                        {{ $produit->quantite }}
+                        @if($produit->quantite == 0)
+                            <span class="badge bg-danger ms-1">Rupture</span>
+                        @elseif($produit->quantite <= 5)
+                            <span class="badge bg-warning text-dark ms-1">Stock faible</span>
+                        @endif
+                    </td>
                     <td>{{ $produit->categorie->name ?? '-' }}</td>
                     <td>
                         <a href="{{ route('code-barres', $produit->id) }}" class="btn btn-sm btn-primary">Étiquette</a>

@@ -1,76 +1,53 @@
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
-    
-    <style>
-        #sidebar-wrapper {
-        background-color: #343a40; /* Couleur de fond plus sombre pour un contraste élevé */
+<style>
+    #sidebar-wrapper {
+        background-color: #343a40;
         color: #ffffff;
         height: 100vh;
         width: 250px;
-      
+        position: sticky;
+        top: 0;
     }
-    
     .sidebar-heading {
-        padding: 10px 15px;
-        font-size: 1.2em;
-        background-color: #6c757d; /* Couleur de fond pour l'en-tête */
+        padding: 15px;
+        font-size: 1.1em;
+        font-weight: bold;
+        background-color: #23272b;
+        border-bottom: 1px solid #495057;
     }
-    
     .list-group-item {
-        border: none; /* Retirer les bordures pour un look plus propre */
+        border: none;
         background-color: #343a40;
-        color: white;
-        font-size: 1.5em;
-
+        color: #ced4da;
+        font-size: 0.95em;
+        padding: 12px 15px;
     }
-    
-    .list-group-item:hover, .list-group-item:focus {
-        background-color: #495057; /* Couleur de survol */
+    .list-group-item:hover, .list-group-item.active {
+        background-color: #495057;
         color: #ffffff;
         text-decoration: none;
-        
     }
-    
     .list-group-item i {
-        width: 30px; /* Espace pour les icônes */
-        min-width: 30px;
+        width: 25px;
         text-align: center;
-        
     }
-    
-    .d-flex.align-items-center {
-        display: flex;
-        align-items: center;
+</style>
 
-    }
-    </style>
-
-    <div class=" border-right" id="sidebar-wrapper" >
-        <div class="sidebar-heading">Salon de Beauté</div>
-        <div class="list-group list-group-flush">
-            <a href="#" class="list-group-item list-group-item-action d-flex align-items-center text-decoration-none">
-                <i class="fas fa-tachometer-alt fa-fw me-3"></i>Dashboard
-            </a>
-            <a href="#" class="list-group-item list-group-item-action d-flex align-items-center text-decoration-none">
-                <i class="fas fa-users fa-fw me-3"></i>Clients
-            </a>
-            <a href="#" class="list-group-item list-group-item-action d-flex align-items-center text-decoration-none">
-                <i class="fas fa-boxes fa-fw me-3"></i>Stock
-            </a>
-            <a href="#" class="list-group-item list-group-item-action d-flex align-items-center text-decoration-none">
-                <i class="fas fa-cash-register fa-fw me-3"></i>Caisses
-            </a>
-            <a href="{{ route('produits.index') }}" class="list-group-item list-group-item-action d-flex align-items-center text-decoration-none">
-                <i class="fas fa-shopping-cart fa-fw me-3"></i>Produits
-            </a>
-            <a href="{{ route('ventes.index') }}" class="list-group-item list-group-item-action d-flex align-items-center text-decoration-none">
-                <i class="fas fa-chart-line fa-fw me-3"></i>Ventes
-            </a>
-            <a href="#" class="list-group-item list-group-item-action d-flex align-items-center text-decoration-none">
-                <i class="fas fa-truck fa-fw me-3"></i>Fournisseurs
-            </a>
-        </div>
+<div id="sidebar-wrapper">
+    <div class="sidebar-heading">
+        <i class="fas fa-cut me-2"></i>Salon de Beauté
     </div>
-    
-    
-</body>
+    <div class="list-group list-group-flush">
+        <a href="{{ route('dashboard') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2 text-decoration-none {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+            <i class="fas fa-tachometer-alt fa-fw"></i> Dashboard
+        </a>
+        <a href="{{ route('produits.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2 text-decoration-none {{ request()->routeIs('produits.*') ? 'active' : '' }}">
+            <i class="fas fa-box fa-fw"></i> Produits
+        </a>
+        <a href="{{ route('categories.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2 text-decoration-none {{ request()->routeIs('categories.*') ? 'active' : '' }}">
+            <i class="fas fa-tags fa-fw"></i> Catégories
+        </a>
+        <a href="{{ route('ventes.index') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2 text-decoration-none {{ request()->routeIs('ventes.*') ? 'active' : '' }}">
+            <i class="fas fa-cash-register fa-fw"></i> Ventes
+        </a>
+    </div>
+</div>
