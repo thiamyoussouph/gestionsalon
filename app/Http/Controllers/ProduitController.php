@@ -78,7 +78,7 @@ class ProduitController extends Controller
         $number = mt_rand(1000000000, 9999999999); // Générer un nombre aléatoire
         // Vérifier que le numéro n'est pas déjà utilisé
         if ($this->barcodeNumberExists($number)) {
-            return generateBarcodeNumber();
+            return $this->generateBarcodeNumber();
         }
         return $number;
     }

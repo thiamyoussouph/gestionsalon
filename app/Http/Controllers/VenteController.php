@@ -39,7 +39,7 @@ class VenteController extends Controller
 
         session()->put('vente', $vente);
 
-        return redirect()->route()->with('success', 'Produit ajouté à la vente.');
+        return redirect()->route('ventes.index')->with('success', 'Produit ajouté à la vente.');
     }
 
     // Finalise la vente, met à jour l'inventaire, et génère le reçu
@@ -61,30 +61,31 @@ class VenteController extends Controller
         $vente->numero_transaction = $request->input('numero_transaction');
         $vente->montant_recu = $request->input('montantRecu', 0); // Utiliser 'input' avec une valeur par défaut
     
+        try {
         DB::transaction(function () use ($vente, $produits, &$total) {
-            $vente->save();  // Sauvegarder la vente pour obtenir un ID
+            $vente->save();
     
             foreach ($produits as $details) {
                 $produit = Produit::find($details['id']);
                 if ($produit && $details['quantite'] > 0) {
                     $quantite = $details['quantite'];
-                    $prix = $details['prix'];  // Assumer que le prix est passé
-    
-                    // Calculer le total pour ce produit
+                    $prix = $details['prix'];
+
+                    if ($produit->quantite < $quantite) {
+                        throw new \Exception("Stock insuffisant pour le produit : {$produit->nom}");
+                    }
+
                     $totalProduit = $quantite * $prix;
-    
-                    // Attacher le produit à la vente avec détails supplémentaires
+
                     $vente->produits()->attach($produit->id, [
                         'quantite' => $quantite,
                         'prix' => $prix,
                         'total' => $totalProduit
                     ]);
-    
-                    // Mise à jour du stock
+
                     $produit->quantite -= $quantite;
                     $produit->save();
-    
-                    // Accumuler le total général de la vente
+
                     $total += $totalProduit;
                 }
             }
@@ -96,6 +97,10 @@ class VenteController extends Controller
             $vente->save();
         });
     
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        }
+
         return response()->json([
             'message' => 'Vente finalisée avec succès',
             'total' => $total,
@@ -136,10 +141,10 @@ class VenteController extends Controller
             return $carry + ($item->pivot->quantite * $item->pivot->prix);
         }, 0);
     
-        // Passer les détails et le total à la vue
         return view('ventes.recu', [
             'vente' => $details,
-            'total' => $total  // Ceci assure que le total est calculé correctement
+            'vente_info' => $vente,
+            'total' => $total,
         ]);
     }
     
